@@ -22,9 +22,9 @@ export const addDeck = (scene: Babylon.Scene): void => {
   const box = Babylon.MeshBuilder.CreateBox(
     `deck${deckId}`,
     {
-      depth: 1,
-      width: 0.4,
-      height: 0.1
+      depth: 0.1,
+      width: 0.2,
+      height: 0.3
     },
     scene
   );

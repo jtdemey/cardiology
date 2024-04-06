@@ -3,7 +3,6 @@ import "babylonjs-materials";
 import { SceneAxes } from "./scene";
 import { type Table, makeCylinder } from "./shapes";
 
-// TODO add "shape" and support for different mesh options
 const TABLES: { [key: string]: Table }= {
   default: {
     table_face: makeCylinder(0, 1, 0, 2, 0.1),

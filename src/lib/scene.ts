@@ -2,21 +2,35 @@ import * as Babylon from "babylonjs";
 import { addDeck } from "$lib/decks";
 import { addTable } from "$lib/tables";
 
+const BANNER_HEIGHT = 16;
+
+export const SceneAxes: { [key: string]: Babylon.Vector3 } = {};
+
 export const createScene = (): void => {
   const canvas: HTMLCanvasElement = document.createElement("canvas");
   canvas.setAttribute("width", window.innerWidth.toString());
-  canvas.setAttribute("height", window.innerHeight.toString());
+  canvas.setAttribute("height", `${window.innerHeight - (BANNER_HEIGHT + 3)}`);
   const root: HTMLElement | null = document.querySelector("main");
   if (!root) return;
+
   root.appendChild(canvas);
   const engine = new Babylon.Engine(canvas, true);
   const scene = new Babylon.Scene(engine);
   scene.clearColor = Babylon.Color4.FromHexString("#333725");
-  const camera = new Babylon.FreeCamera(
+
+  SceneAxes.X = new Babylon.Vector3(1, 0, 0);
+  SceneAxes.Y = new Babylon.Vector3(0, 1, 0);
+  SceneAxes.Z = new Babylon.Vector3(0, 0, 1);
+
+  const camera = new Babylon.ArcRotateCamera(
     "mainCamera",
-    new Babylon.Vector3(5, 7, 0),
+    0,
+    1,
+    0,
+    new Babylon.Vector3(2, 3, 0),
     scene
   );
+  camera.panningSensibility = 0;
   camera.setTarget(Babylon.Vector3.Zero());
   camera.attachControl(canvas, true);
   const light = new Babylon.HemisphericLight(

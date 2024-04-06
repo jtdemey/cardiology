@@ -23,6 +23,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"babylonjs": "^6.45.1"
+		"babylonjs": "^6.45.1",
+		"babylonjs-materials": "^6.47.0"
 	}
 }

@@ -1,51 +1,57 @@
 import * as Babylon from "babylonjs";
+import "babylonjs-materials";
+import { SceneAxes } from "./scene";
+import { type Table, makeCylinder } from "./shapes";
 
 // TODO add "shape" and support for different mesh options
-const TABLES: any = {
-  default: { 
-    table_face: {
-      diameter: 2,
-      height: 0.1,
-      x: 0,
-      y: 10,
-      z: 0
-    },
-    table_leg_1: {
-      diameter: 0.1,
-      height: 1,
-      x: 0.2,
-      y: 0,
-      z: 0.2
-    },
-    table_leg_2: {
-      diameter: 0.1,
-      height: 1,
-      x: 0.4,
-      y: 0,
-      z: 0.4
-    },
-    table_leg_3: {
-      diameter: 0.1,
-      height: 1,
-      x: 0.6,
-      y: 0,
-      z: 0.2
-    }
+const TABLES: { [key: string]: Table }= {
+  default: {
+    table_face: makeCylinder(0, 1, 0, 2, 0.1),
+    table_leg_1: makeCylinder(-0.7, 0.5, 0, 0.1, 1),
+    table_leg_2: makeCylinder(0, 0.5, 0.7, 0.1, 1),
+    table_leg_3: makeCylinder(0.6, 0.5, 0.2, 0.1, 1),
   }
+};
+
+const positionMesh = (
+  mesh: Babylon.Mesh,
+  value: number,
+  vector: Babylon.Vector3
+): void => {
+  if (value === 0) return;
+  mesh.translate(vector, value);
 };
 
 export const addTable = (
   tableName: string = "default",
   scene: Babylon.Scene
 ): void => {
-  const tableMeshOptions = TABLES[tableName];
-  if (!tableMeshOptions) {
+  const tableMeshShapes = TABLES[tableName];
+  if (!tableMeshShapes) {
     console.error(`No table name ${tableName}`);
     return;
   }
-  Object.keys(tableMeshOptions).forEach(segmentKey => {
-    const segment = tableMeshOptions[segmentKey];
-    Babylon.MeshBuilder.CreateCylinder(segment.name, segment, scene);
+
+  Object.keys(tableMeshShapes).forEach(shapeKey => {
+    const shape = tableMeshShapes[shapeKey];
+    console.log(shape);
+    const mesh = Babylon.MeshBuilder.CreateCylinder(
+      shapeKey,
+      // @ts-ignore
+      shape,
+      scene
+    );
+
+    const position = shape.position;
+    positionMesh(mesh, position.x, SceneAxes.X);
+    positionMesh(mesh, position.y, SceneAxes.Y);
+    positionMesh(mesh, position.z, SceneAxes.Z);
+
+    const standardMaterial = new Babylon.StandardMaterial(
+      "standardMaterial",
+      scene
+    );
+    standardMaterial.diffuseColor = Babylon.Color3.FromHexString("#592b11");
+    mesh.material = standardMaterial;
   });
-  // const verticalVector = new Babylon.Vector3(0, 1, 0);
 };

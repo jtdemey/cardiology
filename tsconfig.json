@@ -12,7 +12,8 @@
 		"moduleResolution": "bundler"
 	},
   "types": [
-    "babylonjs"
+    "babylonjs",
+    "babylonjs-materials"
   ]
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//

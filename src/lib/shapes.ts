@@ -1,7 +1,7 @@
-const SHAPES: { [key: string]: string } = {
+export const SHAPES: { [key: string]: string } = {
   CYLINDER: "cylinder",
   RECTANGLE: "rectangle"
-};
+} as const;
 
 type Position = {
   x: number;
@@ -9,8 +9,10 @@ type Position = {
   z: number;
 };
 
-type Shape = {
-  shape: keyof typeof SHAPES;
+export type ShapeName = (typeof SHAPES)[keyof typeof SHAPES];
+
+export type Shape = {
+  shape: ShapeName;
   position: Position;
 };
 
@@ -30,7 +32,7 @@ export type Table = {
 };
 
 const makeShape = (
-  shape: keyof typeof SHAPES,
+  shape: ShapeName,
   x: number,
   y: number,
   z: number
@@ -61,10 +63,10 @@ export const makeRectangle = (
   z: number,
   width: number,
   height: number,
-  depth: number,
+  depth: number
 ): RectangleShape => ({
   ...makeShape(SHAPES.CYLINDER, x, y, z),
   depth,
   height,
-  width,
+  width
 });

@@ -3,8 +3,14 @@
   import { onMount } from "svelte";
   import { addDeck } from "$lib/decks";
   import { createScene } from "$lib/scene";
+  import { connect } from "$lib/client";
 
-  onMount(() => createScene());
+  let socket = null;
+
+  onMount(() => {
+    createScene();
+    socket = connect();
+  });
 </script>
 
 <div id="wrapper">

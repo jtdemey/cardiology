@@ -1,23 +1,25 @@
 <script lang="ts">
   import * as Babylon from "babylonjs";
   import { onMount } from "svelte";
-  import { addDeck } from "$lib/decks";
-  import { createScene } from "$lib/scene";
   import { connect } from "$lib/client";
-
-  let socket = null;
+  import { addDeck } from "$lib/decks";
+  import { setPlayerSocket } from "$lib/player";
+  import { createScene } from "$lib/scene";
+  import PlayerList from "$lib/components/PlayerList.svelte";
 
   onMount(() => {
     createScene();
-    socket = connect();
+    setPlayerSocket(connect());
   });
 </script>
 
 <div id="wrapper">
   <header>
-    <h1>Cardiology!1</h1>
+    <h1>Cardiology!</h1>
   </header>
-  <main></main>
+  <main>
+    <PlayerList />
+  </main>
 </div>
 
 <style>

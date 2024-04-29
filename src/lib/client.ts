@@ -1,19 +1,25 @@
+import { gameId } from "./game";
+import { playerId, playerName, setPlayerId } from "./player";
+
 type Command = {
   command: string;
   module: string;
   [key: string]: any;
 };
 
-const COMMANDS = {
+export const COMMANDS = {
   ACCEPT_CONNECTION: "accept_connection",
+  CHANGE_NAME: "change_name",
   CONNECT: "connect",
   DISCONNECT: "disconnect",
+  JOIN_GAME: "join_game",
+  LEAVE_GAME: "leave_game",
+  PING: "ping",
+  PONG: "pong",
   SERVER_ERROR: "server_error",
 };
 const MODULE_NAME = "cardiology";
 const URI = "ws://localhost:3000/";
-
-let playerId: string;
 
 const makeCommand = (commandName: string, params?: any): string => {
   const command: Command = {
@@ -29,19 +35,26 @@ const makeCommand = (commandName: string, params?: any): string => {
   return JSON.stringify(command);
 };
 
-const verifyArguments = (obj: any, property: string): void => {
-  if (obj[property] === undefined) {
-    throw new Error(`Required argument ${property} is undefined`);
-  }
+const verifyArguments = (obj: any, properties: string[]): void => {
+  properties.forEach(property => {
+    if (obj[property] === undefined) {
+      throw new Error(`Required argument ${property} is undefined`);
+    }
+  });
 };
 
-const handleCommand = (command: Command): void => {
+const handleCommand = (command: Command, socket: WebSocket): void => {
   const commandName = command.command;
   switch (commandName) {
     case COMMANDS.ACCEPT_CONNECTION:
       console.log(command);
-      verifyArguments(command, "playerId");
-      playerId = command.playerId;
+      verifyArguments(command, ["gameId", "playerId", "playerName"]);
+      gameId.set(command.gameId);
+      setPlayerId(command.playerId);
+      playerName.set(command.playerName);
+      break;
+    case COMMANDS.PING:
+      socket.send(makeCommand(COMMANDS.PONG, { playerId }));
       break;
     default:
       console.error(`Command ${commandName} not recognized`);
@@ -70,7 +83,7 @@ export const connect = () => {
       return;
     }
 
-    handleCommand(parsedMessage);
+    handleCommand(parsedMessage, ws);
   });
 
   window.onbeforeunload = () => {

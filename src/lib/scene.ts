@@ -4,8 +4,6 @@ import { SHAPES, type Shape } from "./shapes";
 import { addTable } from "./tables";
 import { nanoid } from "nanoid";
 
-const BANNER_HEIGHT = 16;
-
 export const SceneAxes: { [key: string]: Babylon.Vector3 } = {};
 
 const positionMesh = (
@@ -59,7 +57,7 @@ export const addMeshToScene = (
 export const createScene = (): void => {
   const canvas: HTMLCanvasElement = document.createElement("canvas");
   canvas.setAttribute("width", window.innerWidth.toString());
-  canvas.setAttribute("height", `${window.innerHeight - (BANNER_HEIGHT + 3)}`);
+  canvas.setAttribute("height", (window.innerHeight - 2).toString());
   const root: HTMLElement | null = document.querySelector("main");
   if (!root) return;
 
